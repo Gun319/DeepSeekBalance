@@ -2,7 +2,6 @@
 
 DeepSeek API 余额及用量监控桌面应用，基于 Avalonia 12 + .NET 10，支持 **Windows** 和 **macOS**。
 
-> 本项目参考 [DeepSeekMonitorWindows](https://github.com/Joyi-code/DeepSeekMonitorWindows) 设计实现，使用 C# / Avalonia 跨平台 UI 框架重写。
 
 ## 功能
 
