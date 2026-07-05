@@ -1,0 +1,80 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>Assets/app-icon.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <RuntimeIdentifiers>win-x64;osx-x64;osx-arm64</RuntimeIdentifiers>
+    <IsAotCompatible>true</IsAotCompatible>
+    <PublishAot Condition="'$(Configuration)' == 'Release'">true</PublishAot>
+    <PublishTrimmed Condition="'$(PublishAot)' != 'true'">true</PublishTrimmed>
+    <TrimMode Condition="'$(PublishAot)' != 'true'">full</TrimMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.0.5" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.5" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.5" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.5" />
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+
+  <!-- macOS: auto-create .app bundle on publish (prevents Terminal window) -->
+  <Target Name="CreateMacOSAppBundle" AfterTargets="Publish"
+          Condition="'$(RuntimeIdentifier)' == 'osx-arm64' Or '$(RuntimeIdentifier)' == 'osx-x64'">
+    <PropertyGroup>
+      <AppBundleDir>$(PublishDir)../DeepSeekBalance.app</AppBundleDir>
+    </PropertyGroup>
+    <RemoveDir Directories="$(AppBundleDir)" />
+    <MakeDir Directories="$(AppBundleDir)/Contents/MacOS" />
+    <MakeDir Directories="$(AppBundleDir)/Contents/Resources" />
+    <Copy SourceFiles="$(PublishDir)DeepSeekBalance" DestinationFiles="$(AppBundleDir)/Contents/MacOS/DeepSeekBalance" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)/Assets/app-icon.icns" DestinationFiles="$(AppBundleDir)/Contents/Resources/AppIcon.icns" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)/Info.plist" DestinationFiles="$(AppBundleDir)/Contents/Info.plist" />
+    <!-- Adjust rpath so the .app binary finds .dylib files alongside the .app -->
+    <Exec Command="install_name_tool -add_rpath @executable_path/../../.. &quot;$(AppBundleDir)/Contents/MacOS/DeepSeekBalance&quot;"
+          Condition="$([MSBuild]::IsOSPlatform('osx'))" />
+  </Target>
+
+  <!-- Copy artifacts to out/ directory -->
+  <Target Name="CopyToOut" AfterTargets="Publish"
+          Condition="'$(Configuration)' == 'Release'">
+    <PropertyGroup>
+      <AppBundleSource>$(PublishDir)../DeepSeekBalance.app</AppBundleSource>
+      <OutDir>$(MSBuildProjectDirectory)/out/$(RuntimeIdentifier)</OutDir>
+    </PropertyGroup>
+    <RemoveDir Directories="$(OutDir)" />
+    <MakeDir Directories="$(OutDir)" />
+    <!-- macOS: copy .app + .dylib files alongside -->
+    <Exec Command="cp -R &quot;$(AppBundleSource)&quot; &quot;$(OutDir)/&quot;"
+          Condition="('$(RuntimeIdentifier)' == 'osx-arm64' Or '$(RuntimeIdentifier)' == 'osx-x64') And Exists('$(AppBundleSource)')" />
+    <Copy SourceFiles="$(PublishDir)libAvaloniaNative.dylib" DestinationFolder="$(OutDir)/"
+          Condition="('$(RuntimeIdentifier)' == 'osx-arm64' Or '$(RuntimeIdentifier)' == 'osx-x64') And Exists('$(PublishDir)libAvaloniaNative.dylib')" />
+    <Copy SourceFiles="$(PublishDir)libHarfBuzzSharp.dylib" DestinationFolder="$(OutDir)/"
+          Condition="('$(RuntimeIdentifier)' == 'osx-arm64' Or '$(RuntimeIdentifier)' == 'osx-x64') And Exists('$(PublishDir)libHarfBuzzSharp.dylib')" />
+    <Copy SourceFiles="$(PublishDir)libSkiaSharp.dylib" DestinationFolder="$(OutDir)/"
+          Condition="('$(RuntimeIdentifier)' == 'osx-arm64' Or '$(RuntimeIdentifier)' == 'osx-x64') And Exists('$(PublishDir)libSkiaSharp.dylib')" />
+    <!-- Windows: copy all publish files -->
+    <Exec Command="cp -R &quot;$(PublishDir)&quot;. &quot;$(OutDir)/&quot;"
+          Condition="'$(RuntimeIdentifier)' == 'win-x64'" />
+    <!-- Remove .pdb debug symbols from output -->
+    <Exec Command="rm -f &quot;$(OutDir)&quot;/*.pdb" />
+    <Message Text="Published to $(OutDir)" Importance="high" />
+  </Target>
+</Project>

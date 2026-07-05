@@ -1,0 +1,20 @@
+# .NET
+bin/
+obj/
+out/
+*.user
+*.suo
+*.DotSettings.user
+*.nupkg
+
+# macOS
+.DS_Store
+.DS_Store?
+
+# IDE
+.idea/
+.vs/
+.vscode/
+
+# OS junk
+Thumbs.db

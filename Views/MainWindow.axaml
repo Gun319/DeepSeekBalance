@@ -1,0 +1,574 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DeepSeekBalance.ViewModels"
+        x:Class="DeepSeekBalance.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="DeepSeekBalance"
+        Icon="/Assets/app-icon.ico"
+        Width="500" Height="730"
+        MinWidth="500" MinHeight="730"
+        MaxWidth="500" MaxHeight="730"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource AppBackgroundColor}">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <!-- Shared Styles -->
+        <Style Selector="Border.Card">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundColor}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderColor}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+        <Style Selector="TextBlock.Title">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryColor}" />
+        </Style>
+        <Style Selector="TextBlock.Muted">
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryColor}" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style Selector="TextBlock.Cost">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryColor}" />
+        </Style>
+        <Style Selector="TextBlock.CostSub">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryColor}" />
+        </Style>
+        <Style Selector="Border.StatusPillOk">
+            <Setter Property="Background" Value="#1a3fb950" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="8,2" />
+        </Style>
+        <Style Selector="Border.StatusPillOff">
+            <Setter Property="Background" Value="#1af85149" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="8,2" />
+        </Style>
+        <Style Selector="TextBlock.StatusPillTextOk">
+            <Setter Property="Foreground" Value="{DynamicResource SuccessColor}" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="TextBlock.StatusPillTextOff">
+            <Setter Property="Foreground" Value="{DynamicResource ErrorColor}" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="ProgressBar.ModelBar">
+            <Setter Property="Height" Value="6" />
+        </Style>
+        <Style Selector="Button.Tool">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="6,3" />
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryColor}" />
+        </Style>
+        <Style Selector="Button.Tool:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryColor}" />
+            <Setter Property="Background" Value="{DynamicResource CardBorderColor}" />
+        </Style>
+        <Style Selector="Button.Pri">
+            <Setter Property="Background" Value="{DynamicResource AccentColor}" />
+            <Setter Property="Foreground" Value="#fff" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="14,6" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style Selector="Button.Sec">
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="12,5" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+        <Style Selector="Button.Chip">
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="Padding" Value="10,4" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Background" Value="{DynamicResource CardBorderColor}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryColor}" />
+        </Style>
+        <Style Selector="Button.Chip:pointerover">
+            <Setter Property="Background" Value="{DynamicResource AccentColor}" />
+            <Setter Property="Foreground" Value="#fff" />
+        </Style>
+        <Style Selector="TextBox.Field">
+            <Setter Property="Height" Value="34" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style Selector="Border.ModelBadge">
+            <Setter Property="Width" Value="42" />
+            <Setter Property="Height" Value="42" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Margin" Value="0,0,14,0" />
+        </Style>
+        <Style Selector="Border.MiniCard">
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="14,10" />
+            <Setter Property="Background" Value="{DynamicResource CardBorderColor}" />
+        </Style>
+        <Style Selector="Border.Section">
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundColor}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource CardBorderColor}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+    </Window.Styles>
+
+    <Grid>
+        <!-- =============================== -->
+        <!-- DASHBOARD                        -->
+        <!-- =============================== -->
+        <Grid IsVisible="{Binding IsDashboard}" RowDefinitions="Auto,*,Auto">
+
+            <!-- Header -->
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto" Margin="18,12,18,0">
+                <TextBlock Grid.Column="1" Text="DeepSeekBalance" FontSize="17" FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimaryColor}" VerticalAlignment="Center" />
+                <ProgressBar Grid.Column="2" IsIndeterminate="True" Width="18" Height="18"
+                             IsVisible="{Binding IsLoading}" Margin="0,0,4,0" />
+                <Button Grid.Column="3" Classes="Tool" Command="{Binding RefreshCommand}" IsEnabled="{Binding !IsLoading}"
+                        Width="32" Height="32" Padding="0">
+                    <TextBlock Text="↻" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Button>
+                <Button Grid.Column="4" Classes="Tool" Command="{Binding ToggleThemeCommand}"
+                        Width="32" Height="32" Padding="0">
+                    <TextBlock Text="☀" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Button>
+                <Button Grid.Column="5" Classes="Tool" Command="{Binding GoSettingsCommand}"
+                        Width="32" Height="32" Padding="0">
+                    <TextBlock Text="⚙" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Button>
+            </Grid>
+
+            <ScrollViewer Grid.Row="1" Margin="18,6,18,0">
+                <StackPanel>
+
+                    <!-- === BALANCE CARD === -->
+                    <Border Classes="Card">
+                        <StackPanel Spacing="8">
+                            <!-- Title row -->
+                            <Grid ColumnDefinitions="*,Auto">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="💳" FontSize="14" />
+                                    <TextBlock Text="账户余额" FontSize="13" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextPrimaryColor}" />
+                                </StackPanel>
+                                <Border Grid.Column="1" Classes="StatusPillOk" IsVisible="{Binding IsAvailable}">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <Ellipse Width="6" Height="6" Fill="{DynamicResource SuccessColor}" />
+                                        <TextBlock Text="{Binding BalanceStatusText}" Classes="StatusPillTextOk" />
+                                    </StackPanel>
+                                </Border>
+                                <Border Grid.Column="1" Classes="StatusPillOff" IsVisible="{Binding BalanceStatusOff}">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <Ellipse Width="6" Height="6" Fill="{DynamicResource ErrorColor}" />
+                                        <TextBlock Text="{Binding BalanceStatusText}" Classes="StatusPillTextOff" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            <!-- Amount -->
+                            <StackPanel IsVisible="{Binding !BalanceHasError}">
+                                <TextBlock FontSize="30" FontWeight="Bold"
+                                           Foreground="{DynamicResource TextPrimaryColor}"
+                                           Text="{Binding BalanceAmount, StringFormat='{}{0}'}" />
+                                <TextBlock Text="{Binding BalanceCurrencySymbol, StringFormat='{}币种: {0}'}"
+                                           Classes="Muted" />
+                            </StackPanel>
+
+                            <!-- Error -->
+                            <TextBlock IsVisible="{Binding BalanceHasError}" Text="{Binding BalanceError}"
+                                       Foreground="{DynamicResource ErrorColor}" FontSize="13" />
+
+                            <!-- Mini cards: Today / Month -->
+                            <Grid ColumnDefinitions="*,*" IsVisible="{Binding !BalanceHasError}">
+                                <Border Classes="MiniCard" Margin="0,0,6,0">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <TextBlock Text="☀" FontSize="13" />
+                                            <TextBlock Text="当日消耗" Classes="Muted" FontSize="12" />
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding TodayCost}" Foreground="{DynamicResource WarningColor}"
+                                                   FontSize="15" FontWeight="Bold" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                </Border>
+                                <Border Grid.Column="1" Classes="MiniCard" Margin="6,0,0,0">
+                                    <StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <TextBlock Text="📅" FontSize="13" />
+                                            <TextBlock Text="本月消费" Classes="Muted" FontSize="12" />
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding MonthCost}" Foreground="{DynamicResource WarningColor}"
+                                                   FontSize="15" FontWeight="Bold" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- === USAGE ROWS === -->
+                    <StackPanel IsVisible="{Binding ShowChart}" Spacing="6" Margin="0,0,0,10">
+                        <!-- V4 Flash -->
+                        <Button Classes="Card" Padding="16" Cursor="Hand"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                Background="{DynamicResource CardBackgroundColor}"
+                                BorderBrush="{DynamicResource CardBorderColor}"
+                                BorderThickness="1" CornerRadius="10"
+                                Command="{Binding GoDetailCommand}" CommandParameter="flash">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Border Classes="ModelBadge" Background="{DynamicResource FlashColor}">
+                                    <TextBlock Text="⚡" FontSize="20" Foreground="#fff"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                                    <TextBlock Text="V4 Flash" FontSize="14" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextPrimaryColor}" />
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <TextBlock Text="{Binding FlashTotalTokens, StringFormat='{}{0:N0} Tokens'}"
+                                                   Classes="Muted" />
+                                        <ProgressBar Classes="ModelBar"
+                                                     Value="{Binding FlashTotalTokens}"
+                                                     Maximum="{Binding MaxModelTokens}"
+                                                     Foreground="{DynamicResource FlashColor}" />
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding FlashCacheHitRatePercent, StringFormat='{}缓存命中 {0}%'}"
+                                               Classes="Muted" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                    <TextBlock Classes="Cost" HorizontalAlignment="Right"
+                                               Text="{Binding FlashCost, StringFormat='{}¥{0:F2}'}" />
+                                </StackPanel>
+                            </Grid>
+                        </Button>
+
+                        <!-- V4 Pro -->
+                        <Button Classes="Card" Padding="16" Cursor="Hand"
+                                HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+                                Background="{DynamicResource CardBackgroundColor}"
+                                BorderBrush="{DynamicResource CardBorderColor}"
+                                BorderThickness="1" CornerRadius="10"
+                                Command="{Binding GoDetailCommand}" CommandParameter="pro">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Border Classes="ModelBadge" Background="{DynamicResource ProColor}">
+                                    <TextBlock Text="🧠" FontSize="18" Foreground="#fff"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                                    <TextBlock Text="V4 Pro" FontSize="14" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextPrimaryColor}" />
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <TextBlock Text="{Binding ProTotalTokens, StringFormat='{}{0:N0} Tokens'}"
+                                                   Classes="Muted" />
+                                        <ProgressBar Classes="ModelBar"
+                                                     Value="{Binding ProTotalTokens}"
+                                                     Maximum="{Binding MaxModelTokens}"
+                                                     Foreground="{DynamicResource ProColor}" />
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding ProCacheHitRatePercent, StringFormat='{}缓存命中 {0}%'}"
+                                               Classes="Muted" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                    <TextBlock Classes="Cost" HorizontalAlignment="Right"
+                                               Text="{Binding ProCost, StringFormat='{}¥{0:F2}'}" />
+                                </StackPanel>
+                            </Grid>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- === CHART === -->
+                    <Border Classes="Card" IsVisible="{Binding ShowChart}">
+                        <StackPanel Spacing="10">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <TextBlock Text="📊" FontSize="14" />
+                                    <TextBlock Text="缓存命中明细" FontSize="13" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextPrimaryColor}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                                    <TextBlock Text="{Binding ChartHitRate}" Classes="Muted" />
+                                    <TextBlock Text="{Binding ChartTotal}" Classes="Muted" />
+                                </StackPanel>
+                            </Grid>
+
+                            <!-- Bars -->
+                            <ItemsControl ItemsSource="{Binding ChartBars}" Height="130">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Bottom" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:ChartBar">
+                                        <StackPanel Width="52" VerticalAlignment="Bottom">
+                                            <TextBlock Text="{Binding LabelText}" FontSize="8"
+                                                       HorizontalAlignment="Center"
+                                                       Foreground="{DynamicResource TextSecondaryColor}"
+                                                       Margin="0,0,0,2" />
+                                            <!-- Stacked bar -->
+                                            <Border Width="24" HorizontalAlignment="Center" MinHeight="4">
+                                                <StackPanel VerticalAlignment="Bottom">
+                                                    <Border Background="{DynamicResource ResponseColor}"
+                                                            Height="{Binding RespSegH}"
+                                                            CornerRadius="1,1,0,0" />
+                                                    <Border Background="{DynamicResource CacheMissColor}"
+                                                            Height="{Binding MissSegH}" />
+                                                    <Border Background="{DynamicResource CacheHitColor}"
+                                                            Height="{Binding HitSegH}"
+                                                            CornerRadius="0,0,1,1" />
+                                                </StackPanel>
+                                            </Border>
+                                            <TextBlock Text="{Binding ShortDate}" FontSize="9"
+                                                       Foreground="{DynamicResource TextSecondaryColor}"
+                                                       HorizontalAlignment="Center" Margin="0,3,0,0" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Legend -->
+                            <StackPanel Orientation="Horizontal" Spacing="14" HorizontalAlignment="Center">
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <Border Width="8" Height="8" CornerRadius="2"
+                                            Background="{DynamicResource CacheHitColor}" />
+                                    <TextBlock Text="命中" Classes="Muted" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <Border Width="8" Height="8" CornerRadius="2"
+                                            Background="{DynamicResource CacheMissColor}" />
+                                    <TextBlock Text="未命中" Classes="Muted" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <Border Width="8" Height="8" CornerRadius="2"
+                                            Background="{DynamicResource ResponseColor}" />
+                                    <TextBlock Text="输出" Classes="Muted" />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Status Bar -->
+            <Border Grid.Row="2" Padding="14,5" Background="{DynamicResource CardBackgroundColor}"
+                    BorderBrush="{DynamicResource CardBorderColor}" BorderThickness="0,1,0,0">
+                <TextBlock Text="{Binding LastUpdated, StringFormat='{}更新于 {0}'}" Classes="Muted"
+                           HorizontalAlignment="Right" />
+            </Border>
+        </Grid>
+
+        <!-- =============================== -->
+        <!-- SETTINGS                        -->
+        <!-- =============================== -->
+        <ScrollViewer IsVisible="{Binding IsSettings}" Margin="20,14">
+            <StackPanel Spacing="14" MaxWidth="620">
+                <Grid ColumnDefinitions="Auto,*">
+                    <Button Classes="Tool" Command="{Binding GoDashboardCommand}" Padding="4">
+                        <TextBlock Text="←" FontSize="22" Foreground="{DynamicResource TextPrimaryColor}" />
+                    </Button>
+                    <TextBlock Grid.Column="1" Text="设置" FontSize="20" FontWeight="Bold"
+                               Margin="8,0,0,0" VerticalAlignment="Center"
+                               Foreground="{DynamicResource TextPrimaryColor}" />
+                </Grid>
+
+                <!-- API Key -->
+                <Border Classes="Section">
+                    <StackPanel Spacing="8">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="🔑" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock Text="API Key" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextPrimaryColor}" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Text="用于调用 DeepSeek API 获取余额和用量数据。" Classes="Muted" TextWrapping="Wrap" />
+                        <TextBox Classes="Field" Text="{Binding ApiKey}"
+                                 PlaceholderText="sk-..." />
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button Classes="Pri" Content="验证并保存" Command="{Binding SaveApiKeyCommand}" />
+                            <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center"
+                                        IsVisible="{Binding IsApiKeySaved}">
+                                <Ellipse Width="6" Height="6" Fill="{DynamicResource SuccessColor}" />
+                                <TextBlock Text="已配置" Foreground="{DynamicResource SuccessColor}" FontSize="11" />
+                            </StackPanel>
+                            <Button Classes="Sec" Content="清除 Key" Command="{Binding ClearApiKeyCommand}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Usage Token -->
+                <Border Classes="Section">
+                    <StackPanel Spacing="8">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="📊" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock Text="用量同步 Token" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextPrimaryColor}" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <TextBlock Text="DeepSeek 无官方用量 API，需网页登录 token。" Classes="Muted" TextWrapping="Wrap" />
+                        <TextBlock Text="获取: 登录 platform.deepseek.com → F12 控制台 → JSON.parse(localStorage.userToken).value"
+                                   Classes="Muted" TextWrapping="Wrap" />
+                        <TextBox Classes="Field" Text="{Binding UsageToken}"
+                                 PlaceholderText="粘贴 token..." />
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button Classes="Pri" Content="保存 Token" Command="{Binding SaveUsageTokenCommand}" />
+                            <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center"
+                                        IsVisible="{Binding IsUsageTokenSaved}">
+                                <Ellipse Width="6" Height="6" Fill="{DynamicResource SuccessColor}" />
+                                <TextBlock Text="已配置" Foreground="{DynamicResource SuccessColor}" FontSize="11" />
+                            </StackPanel>
+                            <Button Classes="Sec" Content="清除 Token" Command="{Binding ClearUsageTokenCommand}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Auto Refresh -->
+                <Border Classes="Section">
+                    <StackPanel Spacing="8">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="⏱" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock Text="自动刷新" FontSize="14" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextPrimaryColor}" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="开启后按设定周期自动刷新数据。" Classes="Muted" />
+                            <ToggleSwitch Grid.Column="1" IsChecked="{Binding AutoRefresh}" />
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding AutoRefresh}">
+                            <Button Content="1 分钟" Classes="Chip"
+                                    Command="{Binding SetRefreshCommand}" CommandParameter="60" />
+                            <Button Content="5 分钟" Classes="Chip"
+                                    Command="{Binding SetRefreshCommand}" CommandParameter="300" />
+                            <Button Content="30 分钟" Classes="Chip"
+                                    Command="{Binding SetRefreshCommand}" CommandParameter="1800" />
+                            <Button Content="1 小时" Classes="Chip"
+                                    Command="{Binding SetRefreshCommand}" CommandParameter="3600" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Text="DeepSeekBalance · Avalonia · .NET 10" Classes="Muted"
+                           HorizontalAlignment="Center" Margin="0,6,0,0" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- =============================== -->
+        <!-- MODEL DETAIL                      -->
+        <!-- =============================== -->
+        <ScrollViewer IsVisible="{Binding IsDetail}" Margin="20,14">
+            <StackPanel Spacing="12" MaxWidth="620">
+                <Button Classes="Tool" Command="{Binding GoDashboardCommand}" Padding="4"
+                        HorizontalAlignment="Left">
+                    <TextBlock Text="← 返回" FontSize="16" Foreground="{DynamicResource TextPrimaryColor}" />
+                </Button>
+
+                <!-- Hero -->
+                <Border Classes="Card" Padding="20">
+                    <StackPanel Orientation="Horizontal" Spacing="14">
+                        <Border Classes="ModelBadge" Width="58" Height="48">
+                            <Border.Styles>
+                                <Style Selector="Border">
+                                    <Setter Property="Background" Value="{DynamicResource FlashColor}" />
+                                </Style>
+                            </Border.Styles>
+                            <TextBlock Text="{Binding DetailModelKey}" FontSize="24" FontWeight="Bold"
+                                       Foreground="#fff" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="{Binding DetailModelName}" FontSize="18" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextPrimaryColor}" />
+                            <TextBlock Text="{Binding DetailCost}" FontSize="14"
+                                       Foreground="{DynamicResource TextSecondaryColor}" Margin="0,2,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Metrics -->
+                <Grid ColumnDefinitions="*,*">
+                    <Border Classes="Card" Margin="0,0,6,0">
+                        <StackPanel>
+                            <TextBlock Text="API 请求次数" Classes="Muted" />
+                            <TextBlock Text="{Binding DetailRequestCount}" FontSize="22" FontWeight="Bold"
+                                       Foreground="{DynamicResource AccentColor}" Margin="0,4,0,0" />
+                        </StackPanel>
+                    </Border>
+                    <Border Classes="Card" Margin="6,0,0,0" Grid.Column="1">
+                        <StackPanel>
+                            <TextBlock Text="Tokens" Classes="Muted" />
+                            <TextBlock Text="{Binding DetailTotal}" FontSize="22" FontWeight="Bold"
+                                       Foreground="{DynamicResource AccentColor}" Margin="0,4,0,0" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- Detail Chart -->
+                <Border Classes="Card">
+                    <StackPanel Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel>
+                                <TextBlock Text="按日 Token 消耗" FontSize="14" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextPrimaryColor}" />
+                                <TextBlock Text="{Binding DetailDateRange}" Classes="Muted" />
+                            </StackPanel>
+                        </Grid>
+                        <ItemsControl ItemsSource="{Binding DetailBars}" Height="170">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="2" VerticalAlignment="Bottom" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ChartBar">
+                                    <StackPanel Width="50" VerticalAlignment="Bottom">
+                                        <TextBlock Text="{Binding LabelText}" FontSize="8"
+                                                   HorizontalAlignment="Center"
+                                                   Foreground="{DynamicResource TextSecondaryColor}" Margin="0,0,0,2" />
+                                        <Border Width="22" HorizontalAlignment="Center" MinHeight="4">
+                                            <StackPanel VerticalAlignment="Bottom">
+                                                <Border Background="{DynamicResource ResponseColor}"
+                                                        Height="{Binding RespSegH}" CornerRadius="1,1,0,0" />
+                                                <Border Background="{DynamicResource CacheMissColor}"
+                                                        Height="{Binding MissSegH}" />
+                                                <Border Background="{DynamicResource CacheHitColor}"
+                                                        Height="{Binding HitSegH}" CornerRadius="0,0,1,1" />
+                                            </StackPanel>
+                                        </Border>
+                                        <TextBlock Text="{Binding ShortDate}" FontSize="9"
+                                                   Foreground="{DynamicResource TextSecondaryColor}"
+                                                   HorizontalAlignment="Center" Margin="0,3,0,0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <StackPanel Orientation="Horizontal" Spacing="14" HorizontalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <Border Width="8" Height="8" CornerRadius="2"
+                                        Background="{DynamicResource CacheHitColor}" />
+                                <TextBlock Text="命中" Classes="Muted" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <Border Width="8" Height="8" CornerRadius="2"
+                                        Background="{DynamicResource CacheMissColor}" />
+                                <TextBlock Text="未命中" Classes="Muted" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <Border Width="8" Height="8" CornerRadius="2"
+                                        Background="{DynamicResource ResponseColor}" />
+                                <TextBlock Text="输出" Classes="Muted" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

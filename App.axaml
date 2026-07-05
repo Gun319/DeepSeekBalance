@@ -1,0 +1,48 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DeepSeekBalance.App"
+             RequestedThemeVariant="Default">
+
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="AppBackgroundColor" Color="#0d1117" />
+                    <SolidColorBrush x:Key="CardBackgroundColor" Color="#161b22" />
+                    <SolidColorBrush x:Key="CardBorderColor" Color="#21262d" />
+                    <SolidColorBrush x:Key="TextPrimaryColor" Color="#e6edf3" />
+                    <SolidColorBrush x:Key="TextSecondaryColor" Color="#7d8590" />
+                    <SolidColorBrush x:Key="AccentColor" Color="#4493f8" />
+                    <SolidColorBrush x:Key="FlashColor" Color="#58a6ff" />
+                    <SolidColorBrush x:Key="ProColor" Color="#bc8cff" />
+                    <SolidColorBrush x:Key="SuccessColor" Color="#3fb950" />
+                    <SolidColorBrush x:Key="ErrorColor" Color="#f85149" />
+                    <SolidColorBrush x:Key="WarningColor" Color="#d29922" />
+                    <SolidColorBrush x:Key="CacheHitColor" Color="#3fb950" />
+                    <SolidColorBrush x:Key="CacheMissColor" Color="#f85149" />
+                    <SolidColorBrush x:Key="ResponseColor" Color="#58a6ff" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="AppBackgroundColor" Color="#ffffff" />
+                    <SolidColorBrush x:Key="CardBackgroundColor" Color="#f6f8fa" />
+                    <SolidColorBrush x:Key="CardBorderColor" Color="#d8dee4" />
+                    <SolidColorBrush x:Key="TextPrimaryColor" Color="#1f2328" />
+                    <SolidColorBrush x:Key="TextSecondaryColor" Color="#59636e" />
+                    <SolidColorBrush x:Key="AccentColor" Color="#0550ae" />
+                    <SolidColorBrush x:Key="FlashColor" Color="#0550ae" />
+                    <SolidColorBrush x:Key="ProColor" Color="#8250df" />
+                    <SolidColorBrush x:Key="SuccessColor" Color="#1a7f37" />
+                    <SolidColorBrush x:Key="ErrorColor" Color="#cf222e" />
+                    <SolidColorBrush x:Key="WarningColor" Color="#9a6700" />
+                    <SolidColorBrush x:Key="CacheHitColor" Color="#1a7f37" />
+                    <SolidColorBrush x:Key="CacheMissColor" Color="#cf222e" />
+                    <SolidColorBrush x:Key="ResponseColor" Color="#0550ae" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
