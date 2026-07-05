@@ -75,6 +75,9 @@
           Condition="'$(RuntimeIdentifier)' == 'win-x64'" />
     <!-- Remove .pdb debug symbols from output -->
     <Exec Command="rm -f &quot;$(OutDir)&quot;/*.pdb" />
+    <!-- macOS: create .dmg installer -->
+    <Exec Command="rm -rf /tmp/dmg-src &amp;&amp; mkdir -p /tmp/dmg-src/DeepSeekBalance &amp;&amp; cp -R &quot;$(OutDir)&quot;/* /tmp/dmg-src/DeepSeekBalance/ &amp;&amp; rm -f /tmp/dmg-src/DeepSeekBalance/.DS_Store &amp;&amp; ln -sf /Applications /tmp/dmg-src/Applications &amp;&amp; hdiutil create -volname DeepSeekBalance -srcfolder /tmp/dmg-src -ov -format UDZO &quot;$(MSBuildProjectDirectory)/out/DeepSeekBalance-$(RuntimeIdentifier).dmg&quot; &amp;&amp; rm -rf /tmp/dmg-src"
+          Condition="('$(RuntimeIdentifier)' == 'osx-arm64' Or '$(RuntimeIdentifier)' == 'osx-x64') And $([MSBuild]::IsOSPlatform('osx'))" />
     <Message Text="Published to $(OutDir)" Importance="high" />
   </Target>
 </Project>
